@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-sudo pacman --noconfirm --needed -Syu dialog make || error "Error synking the repos."
+sudo pacman --noconfirm --needed -Syu dialog make base-devel xorg-server xorg-xinit xorg-xrandr || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -72,7 +72,7 @@ install_dwm_additional_package() {
     [ -d $HOME/.config/$1 ] && mv $HOME/.config/$1 $HOME/.config/$1-old
     [ ! -d $HOME/.config/$1 ] && mkdir -p $HOME/.config/$1
     git clone "https://github.com/razvan171514/$1.git" $HOME/.config/$1
-    make -C $HOME/.config/$1 clean install
+    sudo make -C $HOME/.config/$1 clean install
     echo 'DONE'
 }
 
