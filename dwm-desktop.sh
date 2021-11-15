@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-sudo pacman --noconfirm --needed -Syu dialog make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
+sudo pacman --noconfirm --needed -Syu dialog sed make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -68,4 +68,29 @@ install_dwm_desktop() {
 }
 
 install_dwm_desktop || error "Wrong choice"
+
+install_lightdm() {
+    sudo pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter
+    sudo sed -i "s/$(grep 'greeter-session=' /etc/lightdm/lightdm.conf)/greeter-sesstion=lightdm-gtk-greeter/" /etc/lightdm/lightdm.conf
+}
+
+install_diaplay_manager() {
+    choices=$(dialog --clear\
+	--cancel-label 'Skip'\
+	--checklist 'Chose display managers to install. Use space to select option' 0 70 0\
+	    1 'lightdm' on\
+	    2 'sddm' off \
+	    3 'gdm' off 3>&1 1>&2 2>&3 3>&-)
+   for package in $choices 
+    do
+	case $package in
+	    1) install_lidhtdm ;;
+	    2) echo "aasd" ;; 
+	    3) echo 'asd' ;;
+	esac
+    done
+
+}
+
+install_diaplay_manager || error "Wrong choice"
 
