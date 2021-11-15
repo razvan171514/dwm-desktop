@@ -13,7 +13,7 @@ echo "########################################################"
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
     --no-label 'Exit installation'\
-    --yesno 'This installation should not be run as root becaues of changes made to the $HOME directory. For any uses of the sudo command we will ask for the sudo password' 10 60 || error 'Exited by user'
+    --yesno "This installation should not be run as root becaues of changes made to the $HOME directory. For any uses of the sudo command we will ask for the sudo password" 10 60 || error 'Exited by user'
 
 if [[ $(id -u) = 0 ]]; then
     error "User is not supposed to be root. Please run installation as a normal user."
@@ -38,8 +38,8 @@ install_dwm_desktop() {
     for package in $choices 
     do
 	case $package in
-	    1) echo "1" ;;
-	    2) echo "2" ;;
+	    1) install_dwm ;;
+	    2) install_dmenu ;; #|| error "Could not install dmenu." ;;
 	    3) echo "3" ;;
 	    4) echo "4" ;;
 	esac
@@ -48,3 +48,17 @@ install_dwm_desktop() {
 
 install_dwm_desktop || error "Wrong choice"
 
+install_dwm() {
+    echo "Installing dwm"
+    [ -d $HOME/.config/dwm ] && mv $HOME/.config/dwm $HOME/.config/dwm-old
+    [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
+    [ ! -d $HOME/.config ] && mkdir -p $HOME/.config
+    [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
+    [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
+    git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
+    echo "DONE"
+}
+
+install_dmenu() {
+    echo "dmenu"
+}
