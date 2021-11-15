@@ -28,6 +28,21 @@ last_worning() {
 
 last_worning || error "Wrong choice"
 
+install_dwm() {
+    echo "Installing dwm"
+    [ -d $HOME/.config/dwm ] && mv $HOME/.config/dwm $HOME/.config/dwm-old
+    [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
+    [ ! -d $HOME/.config ] && mkdir -p $HOME/.config
+    [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
+    [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
+    git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
+    echo "DONE"
+}
+
+install_dmenu() {
+    echo "dmenu"
+}
+
 install_dwm_desktop() {
     choices=$(dialog --clear\
 	--checklist 'Chose the packages to install. Use space to select option' 0 70 0\
@@ -48,17 +63,3 @@ install_dwm_desktop() {
 
 install_dwm_desktop || error "Wrong choice"
 
-install_dwm() {
-    echo "Installing dwm"
-    [ -d $HOME/.config/dwm ] && mv $HOME/.config/dwm $HOME/.config/dwm-old
-    [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
-    [ ! -d $HOME/.config ] && mkdir -p $HOME/.config
-    [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
-    [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
-    git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
-    echo "DONE"
-}
-
-install_dmenu() {
-    echo "dmenu"
-}
