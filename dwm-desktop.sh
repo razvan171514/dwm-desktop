@@ -32,15 +32,39 @@ install_dwm() {
     echo "Installing dwm"
     [ -d $HOME/.config/dwm ] && mv $HOME/.config/dwm $HOME/.config/dwm-old
     [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
-    [ ! -d $HOME/.config ] && mkdir -p $HOME/.config
     [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
     [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
     git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
+    cp $HOME/.config/dwm/autostart.sh $HOME/.dwm
+    make -C $HOME/.config/dwm clean install
     echo "DONE"
 }
 
 install_dmenu() {
-    echo "dmenu"
+    echo "Installing dmenu"
+    [ -d $HOME/.config/dmenu ] && mv $HOME/.config/dmenu $HOME/.config/dmenu-old
+    [ ! -d $HOME/.config/dmenu ] && mkdir -p $HOME/.config/dmenu
+    git clone https://github.com/razvan171514/dmenu.git $HOME/.config/dmenu
+    make -C $HOME/.config/dmenu clean install
+    echo "DONE"
+}
+
+install_st() {
+    echo "Installing st"
+    [ -d $HOME/.config/st ] && mv $HOME/.config/st $HOME/.config/st-old
+    [ ! -d $HOME/.config/st ] && mkdir -p $HOME/.config/st
+    git clone https://github.com/razvan171514/st.git $HOME/.config/st
+    make -C $HOME/.config/st clean install
+    echo "DONE"
+}
+
+install_slstatus() {
+    echo "Installing slstatus"
+    [ -d $HOME/.config/slstatus ] && mv $HOME/.config/slstatus $HOME/.config/slstatus-old
+    [ ! -d $HOME/.config/slstatus ] && mkdir -p $HOME/.config/slstatus
+    git clone https://github.com/razvan171514/slstatus.git $HOME/.config/slstatus
+    make -C $HOME/.config/slstatus clean install
+    echo "DONE"
 }
 
 install_dwm_desktop() {
@@ -55,8 +79,8 @@ install_dwm_desktop() {
 	case $package in
 	    1) install_dwm ;;
 	    2) install_dmenu ;; #|| error "Could not install dmenu." ;;
-	    3) echo "3" ;;
-	    4) echo "4" ;;
+	    3) install_slstatus ;;
+	    4) install_st ;;
 	esac
     done
 }
