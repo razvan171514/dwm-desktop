@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-#sudo pacman --noconfirm --needed -Syu dialog make || error "Error synking the repos."
+sudo pacman --noconfirm --needed -Syu dialog make || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -67,6 +67,15 @@ install_slstatus() {
     echo "DONE"
 }
 
+install_dwm_additional_package() {
+    echo "Installing $1"
+    [ -d $HOME/.config/$1 ] && mv $HOME/.config/$1 $HOME/.config/$1-old
+    [ ! -d $HOME/.config/$1 ] && mkdir -p $HOME/.config/$1
+    git clone "https://github.com/razvan171514/$1.git" $HOME/.config/$1
+    make -C $HOME/.config/$1 clean install
+    echo 'DONE'
+}
+
 install_dwm_desktop() {
     choices=$(dialog --clear\
 	--checklist 'Chose the packages to install. Use space to select option' 0 70 0\
@@ -78,9 +87,9 @@ install_dwm_desktop() {
     do
 	case $package in
 	    1) install_dwm ;;
-	    2) install_dmenu ;; #|| error "Could not install dmenu." ;;
-	    3) install_slstatus ;;
-	    4) install_st ;;
+	    2) install_dwm_additional_package dmenu ;; 
+	    3) install_dwm_additional_package slstatus ;;
+	    4) install_dwm_additional_package st ;;
 	esac
     done
 }
