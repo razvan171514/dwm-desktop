@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-sudo pacman --noconfirm --needed -Syu dialog make base-devel xorg-server xorg-xinit xorg-xrandr || error "Error synking the repos."
+sudo pacman --noconfirm --needed -Syu dialog make base-devel xorg-server xorg-xinit xorg-xrandr libxft || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -37,33 +37,6 @@ install_dwm() {
     git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
     cp $HOME/.config/dwm/autostart.sh $HOME/.dwm
     make -C $HOME/.config/dwm clean install
-    echo "DONE"
-}
-
-install_dmenu() {
-    echo "Installing dmenu"
-    [ -d $HOME/.config/dmenu ] && mv $HOME/.config/dmenu $HOME/.config/dmenu-old
-    [ ! -d $HOME/.config/dmenu ] && mkdir -p $HOME/.config/dmenu
-    git clone https://github.com/razvan171514/dmenu.git $HOME/.config/dmenu
-    make -C $HOME/.config/dmenu clean install
-    echo "DONE"
-}
-
-install_st() {
-    echo "Installing st"
-    [ -d $HOME/.config/st ] && mv $HOME/.config/st $HOME/.config/st-old
-    [ ! -d $HOME/.config/st ] && mkdir -p $HOME/.config/st
-    git clone https://github.com/razvan171514/st.git $HOME/.config/st
-    make -C $HOME/.config/st clean install
-    echo "DONE"
-}
-
-install_slstatus() {
-    echo "Installing slstatus"
-    [ -d $HOME/.config/slstatus ] && mv $HOME/.config/slstatus $HOME/.config/slstatus-old
-    [ ! -d $HOME/.config/slstatus ] && mkdir -p $HOME/.config/slstatus
-    git clone https://github.com/razvan171514/slstatus.git $HOME/.config/slstatus
-    make -C $HOME/.config/slstatus clean install
     echo "DONE"
 }
 
