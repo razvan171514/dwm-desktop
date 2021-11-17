@@ -85,12 +85,15 @@ install_xdm() {
 }
 
 enable_dm() {
+    echo "Enableing $1"
     if [ -f /etc/systemd/system/display-manager.service ]; then
+	echo "Disableing allready existing display manager"
 	sudo systemctl disable display-manager.serveice 
 	sudo systemctl stop display-manager.serveice
     fi
     sudo systemctl enable "$1.serveice"
     sudo systemctl start "$1.serveice"
+    echo "DONE"
 }
 
 install_diaplay_manager() {
@@ -113,7 +116,7 @@ install_diaplay_manager() {
 	--cancel-label 'Skip'\
 	--menu 'Chose display manager to enable' 0 70 0\
 	    $(echo ${chosen_dms[@]} | sed 's/ /\n/g' | awk '{print NR, $1}') 3>&1 1>&2 2>&3 3>&-)
-    enable_dm "$dm_to_enable" || error "Cannot enable $dm_to_enable"
+    enable_dm "${chosen_dms[${dm_to_enable}-1]}" || error "Cannot enable $dm_to_enable"
 }
 
 install_diaplay_manager || error "Wrong choice"
