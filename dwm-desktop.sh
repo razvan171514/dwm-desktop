@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-sudo pacman --noconfirm --needed -Syu dialog sed make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
+#sudo pacman --noconfirm --needed -Syu dialog sed make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -67,29 +67,53 @@ install_dwm_desktop() {
     done
 }
 
-install_dwm_desktop || error "Wrong choice"
+#install_dwm_desktop || error "Wrong choice"
 
 install_lightdm() {
+    [ -f /etc/lightdm/lightdm.conf ] && cp /etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf.old
     sudo pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter
     sudo sed -i "s/$(grep 'greeter-session=' /etc/lightdm/lightdm.conf)/greeter-sesstion=lightdm-gtk-greeter/" /etc/lightdm/lightdm.conf
 }
 
+install_sddm() {
+    sudo pacman --noconfirm --needed -S sddm
+}
+
+#TODO: Make configuration for xdm
+install_xdm() {
+    sudo pacman --noconfirm --needed -S xdm-archlinux
+}
+
+enable_dm() {
+    if [ -f /etc/systemd/system/display-manager.service ]; then
+	sudo systemctl disable display-manager.serveice 
+	sudo systemctl stop display-manager.serveice
+    fi
+    sudo systemctl enable "$1.serveice"
+    sudo systemctl start "$1.serveice"
+}
+
 install_diaplay_manager() {
+    declare -a dms=('lightdm' 'sddm' 'xdm-archlinux')
     choices=$(dialog --clear\
 	--cancel-label 'Skip'\
 	--checklist 'Chose display managers to install. Use space to select option' 0 70 0\
-	    1 'lightdm' on\
-	    2 'sddm' off \
-	    3 'gdm' off 3>&1 1>&2 2>&3 3>&-)
-   for package in $choices 
+	     $(echo "${dms[@]}" | sed 's/ /\n/g' | awk '{print NR, $1, "off"}') 3>&1 1>&2 2>&3 3>&-)
+    declare -a chosen_dms=()
+    for package in $choices 
     do
+	chosen_dms+=("${dms[${package}-1]}")
 	case $package in
-	    1) install_lidhtdm ;;
-	    2) echo "aasd" ;; 
-	    3) echo 'asd' ;;
+	    1) echo "";; #install_lightdm ;;
+	    2) echo "";; #install_sddm ;; 
+	    *) echo "";; #echo 'Option not supported yet' ;;
 	esac
     done
-
+    dm_to_enable=$(dialog --clear\
+	--cancel-label 'Skip'\
+	--menu 'Chose display manager to enable' 0 70 0\
+	    $(echo ${chosen_dms[@]} | sed 's/ /\n/g' | awk '{print NR, $1}') 3>&1 1>&2 2>&3 3>&-)
+    enable_dm "$dm_to_enable" || error "Cannot enable $dm_to_enable"
 }
 
 install_diaplay_manager || error "Wrong choice"
