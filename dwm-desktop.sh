@@ -34,9 +34,11 @@ install_dwm() {
     [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
     [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
     [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
+    chmod a+x $HOME/.dwm/autostart.sh
     git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
     cp $HOME/.config/dwm/autostart.sh $HOME/.dwm
     sudo make -C $HOME/.config/dwm clean install
+    sudo pacman --noconfirm --needed -S nitrogen picom
     echo "DONE"
 }
 
@@ -84,6 +86,7 @@ install_xdm() {
     sudo pacman --noconfirm --needed -S xdm-archlinux
 }
 
+#TODO: Problem when starting dm (it stops the install script) 
 enable_dm() {
     echo "Enableing $1"
     if [ -f /etc/systemd/system/display-manager.service ]; then
@@ -91,8 +94,8 @@ enable_dm() {
 	sudo systemctl disable display-manager.serveice 
 	sudo systemctl stop display-manager.serveice
     fi
-    sudo systemctl enable "$1.serveice"
-    sudo systemctl start "$1.serveice"
+    sudo systemctl enable "$1"
+#    sudo systemctl start "$1"
     echo "DONE"
 }
 
