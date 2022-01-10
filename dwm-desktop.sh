@@ -8,7 +8,7 @@ echo "########################################################"
 echo "## This installation requires dialog as a dependency. ##"
 echo "## We will first synk and update all repos.           ##"
 echo "########################################################"
-#sudo pacman --noconfirm --needed -Syu dialog sed make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
+sudo pacman --noconfirm --needed -Syu dialog sed make base-devel xorg-server xorg-xinit xorg-xrandr libxft libxinerama || error "Error synking the repos."
 
 dialog --clear --title 'Welcome to dwm install scrip'\
     --yes-label 'Continue'\
@@ -34,9 +34,9 @@ install_dwm() {
     [ -d $HOME/.dwm ] && mv $HOME/.dwm $HOME/.dwm-old
     [ ! -d $HOME/.config/dwm ] && mkdir -p $HOME/.config/dwm
     [ ! -d $HOME/.dwm ] && mkdir -p $HOME/.dwm
-    chmod a+x $HOME/.dwm/autostart.sh
     git clone https://github.com/razvan171514/dwm.git $HOME/.config/dwm
     cp $HOME/.config/dwm/autostart.sh $HOME/.dwm
+    chmod a+x $HOME/.dwm/autostart.sh
     sudo make -C $HOME/.config/dwm clean install
     sudo pacman --noconfirm --needed -S nitrogen picom
     echo "DONE"
