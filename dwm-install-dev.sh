@@ -38,6 +38,9 @@ install_dwm() {
 #  chmod a+x $HOME/.dwm/autostart.sh
 #  sudo make -C $HOME/.config/dwm clean install || warning "cannot install dwm"; return
 #
+#  [ -f $HOME/.xinitrc ] && mv $HOME/.xinitrc $HOME/.xinitrc.old
+#  echo 'exec dwm' > $HOME/.xinitrc
+#
 #  dialog --clear \
 #    --title 'Install optional packages' \
 #    --yes-label 'Install' \
@@ -80,6 +83,14 @@ install_lightdm() {
 #    [ -f /etc/lightdm/lightdm.conf ] && cp /etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf.old
 #    sudo pacman --noconfirm --needed -S lightdm lightdm-gtk-greeter
 #    sudo sed -i "s/$(grep 'greeter-session=' /etc/lightdm/lightdm.conf)/greeter-session=lightdm-gtk-greeter/" /etc/lightdm/lightdm.conf
+#
+#  dialog --clear \
+#      --title 'Lightdm enable' \
+#      --yes-label 'Enable' \
+#      --no-label 'Skip' \
+#      --yesno 'Do you want to enable lightdm.service?' 10 60 || return
+#  sudo systemctl stop display-manager.service && sudo systemctl disable display-manager.service
+#  sudo systemctl enable lightdm.service
   echo -e '\e[36mDONE installing lightdm\e[0m'
 }
 
